@@ -26,52 +26,19 @@ let count = 0;
 //   runServer();
 // }
 
-// let browser;
+let browser;
 
-// const launchChrome = async () => {
-//   browser = await puppeteer.launch({
-//     executablePath: executablePath,
-//     args: [
-//       '–no-first-run', // 没有设置首页。在启动的时候，就会打开一个空白页面。
-//       '--no-sandbox', // 去沙箱（沙箱技术经常被用于执行未经测试的或不可信的客户程序）
-//       '--disable-setuid-sandbox', 
-//       '–single-process', // 将 Dom 解析和渲染放到同一进程
-//       '–disable-gpu',
-//       '–disable-dev-shm-usage',
+const launchChrome = async () => {
+  browser = await puppeteer.launch({
+    executablePath: executablePath
+  });
+}
 
-//     ]
-//   });
-// }
-
-// (async () => {
-//   // if(!browser) {
-//   //   await launchChrome();
-//   // }
-//   browser = await puppeteer.launch({
-//     executablePath: executablePath,
-//     args: [
-//       '–no-first-run', // 没有设置首页。在启动的时候，就会打开一个空白页面。
-//       '--no-sandbox', // 去沙箱（沙箱技术经常被用于执行未经测试的或不可信的客户程序）
-//       '--disable-setuid-sandbox', 
-//       '–single-process', // 将 Dom 解析和渲染放到同一进程
-
-//     ]
-//   });
-// (async () => {
-  
-// })()
-
+(async () => {
+  if(!browser) {
+    await launchChrome();
+  }
   http.createServer(async (req, res) => {
-    const browser = await puppeteer.launch({
-      executablePath: executablePath,
-      args: [
-        '–no-first-run', // 没有设置首页。在启动的时候，就会打开一个空白页面。
-        '--no-sandbox', // 去沙箱（沙箱技术经常被用于执行未经测试的或不可信的客户程序）
-        '--disable-setuid-sandbox', 
-        '–single-process', // 将 Dom 解析和渲染放到同一进程
-  
-      ]
-    });
     try {
       const page = await browser.newPage();
       await page.setViewport({
@@ -80,12 +47,10 @@ let count = 0;
         isMobile: true
       })
       await page.setContent(HTML)
-      const img = await page.screenshot({ encoding: 'base64' });
-      await browser.close()
+      const img = await page.screenshot({ encoding: 'base64' })
+      await page.close()
 
       count += 1;
-      // res.writeHead(200,{'Content-Type':'text/html'});
-      // res.write(`<html><body>screenshort！！！！<img src="${img}" /> </body></html>`);
       console.log('count', count);
       res.end(img);
     } catch (e) {
@@ -93,6 +58,10 @@ let count = 0;
     }
     
   }).listen(8000)
+
+})();
+
+  
 
   // server.listen(8000, '127.0.0.1', () => {
   //   console.log(`Server running at http://127.0.0.1:8000/`);
