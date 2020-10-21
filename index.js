@@ -30,7 +30,15 @@ let browser;
 
 const launchChrome = async () => {
   browser = await puppeteer.launch({
-    executablePath: executablePath
+    executablePath: executablePath,
+    args: [
+      '–no-first-run', // 没有设置首页。在启动的时候，就会打开一个空白页面。
+      '--no-sandbox', // 去沙箱（沙箱技术经常被用于执行未经测试的或不可信的客户程序）
+      '--disable-setuid-sandbox', 
+      '–single-process', // 将 Dom 解析和渲染放到同一进程
+      '–disable-gpu',
+      '–disable-dev-shm-usage',
+    ]
   });
 }
 
